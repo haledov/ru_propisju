@@ -18,6 +18,7 @@ module RuPropisju
     "uah" => :griven,
     "eur" => :evro,
     "kzt" => :tenge,
+    "byn" => :belrub,
   }
 
   SUPPORTED_CURRENCIES = CURRENCIES.keys.join ','
@@ -74,6 +75,8 @@ module RuPropisju
       :kzt_integral => ["тенге", "тенге", "тенге"],
       :kzt_fraction => ['тиын', 'тиына', 'тиынов'],
       :eur_integral => ["евро", "евро", "евро"],
+      :byn_integral => ["белорусский рубль", "белорусских рубля", "белорусских рублей"],
+      :byn_fraction => ['копейка', 'копейки', 'копеек'],
       # по опыту моей прошлой работы в банке
       # центами называют дробную часть доллара
       # а дробную часть евро называют евроцентом
@@ -477,6 +480,21 @@ module RuPropisju
 
     money(amount, locale, integrals_key, fractions_key, money_gender, false, false, options)
   end
+   # Выводит целое или дробное число как сумму в ,белорусских рублях прописью
+  #
+  #   belrub(345.2) #=> "триста сорок пять белорусских рублей 20 копеек"
+  #
+  # ==== Опции
+  # * +:always_show_fraction+ - true/false. позволяет принудительно отображать 0 в качестве дробной части для целого числа
+  # * +:fraction_formatter+ - строка. формат отображения числа после точки, например '%d'
+  def belrub(amount, locale = :ru, options = {})
+    integrals_key = :byn_integral
+    fractions_key = :rub_fraction
+    money_gender = MONEY_GENDERS[:rub]
+
+    money(amount, locale, integrals_key, fractions_key, money_gender, true, false, options)
+  end
+
 
   # Выводит сумму прописью в рублях по количеству копеек
   #
